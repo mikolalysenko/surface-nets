@@ -43,14 +43,22 @@ function buildSurfaceNets(order, dtype) {
     maskStr.push("(p" + i + "<<" + i + ")")
   }
   //Generate variables and giganto switch statement
-  code.push("var m=", maskStr.join("+"), ";console.log(v0,v1,v2,v3,p0,p1,p2,p3,m);switch(m){")
+  code.push("var m=", maskStr.join("+"), ";",
+    "console.log('         ',p0,p1,p2,p3,m,'--',v0,v1,v2,v3);",
+    //"a.push([d0,d1]);return;",
+    "switch(m){")
   for(var i=0; i<1<<(1<<dimension); ++i) {
     code.push("case ", i, ":")
     var crossings = new Array(dimension)
     var denoms = new Array(dimension)
+    var crossingCount = new Array(dimension)
+    var bias = new Array(dimension)
+    var totalCrossings = 0
     for(var j=0; j<dimension; ++j) {
       crossings[j] = []
       denoms[j] = []
+      crossingCount[j] = 0
+      bias[j] = 0
     }
     for(var j=0; j<(1<<dimension); ++j) {
       for(var k=0; k<dimension; ++k) {
@@ -59,25 +67,57 @@ function buildSurfaceNets(order, dtype) {
           continue
         }
         if(!(i&(1<<u)) !== !(i&(1<<j))) {
-          if(!(i&(1<<k))) {
+          var sign = 1
+          if(i&(1<<u)) {
             denoms[k].push("v" + u + "-v" + j)
           } else {
             denoms[k].push("v" + j + "-v" + u)
+            sign = -sign
           }
-          crossings[k].push("v" + j + "+v" + u)
+          if(sign < 0) {
+            crossings[k].push("-v" + j + "-v" + u)
+            crossingCount[k] += 2
+          } else {
+            crossings[k].push("v" + j + "+v" + u)
+            crossingCount[k] -= 2            
+          }
+          totalCrossings += 1
+          for(var l=0; l<dimension; ++l) {
+            if(l === k) {
+              continue
+            }
+            if(u&(1<<l)) {
+              bias[l] += 1
+            } else {
+              bias[l] -= 1
+            }
+          }
+          code.push("console.log('         ',",k, ",", 
+            crossings[k][crossings[k].length-1],  sign>0 ? "-" : "+", "512," , 
+            denoms[k][denoms[k].length-1], ");")
         }
       }
     }
     var vertexStr = []
     for(var k=0; k<dimension; ++k) {
       if(crossings[k].length === 0) {
-        vertexStr.push("d" + k + "+0.5")
+        vertexStr.push("d" + k + "-0.5")
       } else {
-        var cStr = (2*crossings[k].length) + "*c"
-        vertexStr.push("d" + k + "+0.5+0.5*(" + crossings[k].join("+") + "-" + cStr + ")/(" + denoms[k].join("+") + ")")
+        var cStr = ""
+        if(crossingCount[k] < 0) {
+          cStr = crossingCount[k] + "*c"
+        } else if(crossingCount[k] > 0) {
+          cStr = "+" + crossingCount[k] + "*c"
+        }
+        var weight = 0.5 * (crossings[k].length / totalCrossings)
+        var shift = 0.5 + 0.5 * (bias[k] / totalCrossings)
+        vertexStr.push("d" + k + "-" + shift + "-" + weight + "*(" + crossings[k].join("+") + cStr + ")/(" + denoms[k].join("+") + ")")
+        
       }
     }
-    code.push("a.push([", vertexStr.join(), "]);break;")
+    code.push("a.push([", vertexStr.join(), "]);",
+      "console.log('         ',a[a.length-1]);",
+      "break;")
   }
   code.push("default:}},")
 
@@ -88,6 +128,9 @@ function buildSurfaceNets(order, dtype) {
   }
   faceArgs.push("c0", "c1", "p0", "p1", "a", "b", "c")
   code.push("cell:function cellFunc(", faceArgs.join(), "){")
+
+  code.push("console.log('face:',v0,v1,c0,c1,p0,p1,c);")
+
   var facets = triangulateCube(dimension-1)
   code.push("if(p0){b.push(",
     facets.map(function(f) {
