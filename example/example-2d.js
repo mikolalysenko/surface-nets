@@ -11,7 +11,7 @@ fill(array, function(i,j) {
 
 var complex = surfaceNets(array, 16*16)
 
-var svgFile = ['<svg width="320" height="320">']
+var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
 complex.cells.forEach(function(cell) {
   var p0 = complex.positions[cell[0]]
   var p1 = complex.positions[cell[1]]

@@ -1,6 +1,6 @@
 surface-nets
 ============
-Extract a triangulated level set from an ndarray in any dimension.
+Extract a simplicial level set from an [ndarray](https://github.com/mikolalysenko/ndarray) in any dimension using naive surface nets.  This module works in both node.js and with [browserify](http://browserify.org/)!
 
 # Example
 
@@ -22,7 +22,7 @@ fill(array, function(i,j) {
 var complex = surfaceNets(array, 16*16)
 
 //Write to SVG file
-var svgFile = ['<svg width="320" height="320">']
+var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
 complex.cells.forEach(function(cell) {
   var p0 = complex.positions[cell[0]]
   var p1 = complex.positions[cell[1]]
