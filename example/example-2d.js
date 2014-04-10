@@ -4,7 +4,7 @@ var surfaceNets = require("../surfacenets.js")
 var ndarray = require("ndarray")
 var fill = require("ndarray-fill")
 
-var array = ndarray(new Float32Array(64*33), [64,33])
+var array = ndarray(new Float32Array(32*32), [32,32])
 fill(array, function(i,j) {
   return Math.pow(i-16,2) + Math.pow(j-16,2)
 })
@@ -24,4 +24,4 @@ svgFile.push('<circle cx="', 10*16, '" cy="', 10*16, '" r="160" stroke="black" s
 svgFile.push('</svg>')
 
 var fs = require("fs")
-fs.writeFileSync("out.svg", svgFile.join(""))
+fs.writeFileSync("example/2d.svg", svgFile.join(""))
