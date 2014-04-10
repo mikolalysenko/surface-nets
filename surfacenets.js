@@ -2,8 +2,6 @@
 
 module.exports = surfaceNets
 
-var beautify = require("js-beautify")
-
 var generateContourExtractor = require("ndarray-extract-contour")
 var triangulateCube = require("triangulate-hypercube")
 
@@ -123,8 +121,6 @@ function buildSurfaceNets(order, dtype) {
   faceArgs.push("c0", "c1", "p0", "p1", "a", "b", "c")
   code.push("cell:function cellFunc(", faceArgs.join(), "){")
 
-  code.push("console.log('face:',v0,v1,v2,v3,c0,c1,p0,p1,c);")
-
   var facets = triangulateCube(dimension-1)
   code.push("if(p0){b.push(",
     facets.map(function(f) {
@@ -141,8 +137,6 @@ function buildSurfaceNets(order, dtype) {
     }).join(),
     ")}}});function ", funcName, "(array,level){var verts=[],cells=[];contour(array,verts,cells,level);return {positions:verts,cells:cells};} return ", funcName)
 
-  console.log(beautify(code.join("")))
-
   //Compile and link
   var proc = new Function("genContour", code.join(""))
   return proc(generateContourExtractor)
@@ -151,6 +145,9 @@ function buildSurfaceNets(order, dtype) {
 var CACHE = {}
 
 function surfaceNets(array,level) {
+  if(array.dimension === 0) {
+    return { positions: [], cells: [] }
+  }
   var typesig = array.order.join() + "-" + array.dtype
   var proc = CACHE[typesig]
   var level = (+level) || 0.0

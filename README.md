@@ -81,7 +81,7 @@ And here is the result:
 
 <img src="https://mikolalysenko.github.io/surface-nets/example/3d.svg">
 
-4D and higher dimensions are possible, but harder to visualize
+The code *should* work in 4D and higher dimensions, but this is untested and it is harder to visualize.  (Also, why would you want to bother?)
 
 # Install
 
