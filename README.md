@@ -21,14 +21,22 @@ fill(array, function(i,j) {
 //Extract contour
 var complex = surfaceNets(array, 16*16)
 
-//Write to SVG file
+//Write to SVG header
 var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
+
+//Draw lines
 complex.cells.forEach(function(cell) {
   var p0 = complex.positions[cell[0]]
   var p1 = complex.positions[cell[1]]
   svgFile.push('<line x1="', 10*p0[0], '" y1="', 10*p0[1], '" x2="', 10*p1[0], '" y2="', 10*p1[1], '" style="stroke:rgb(255,0,0);stroke-width:1" />')
 })
-svgFile.push('<circle cx="', 10*16, '" cy="', 10*16, '" r="160" stroke="black" stroke-width="1" fill="none" />')
+
+//Draw vertices
+complex.positions.forEach(function(p) {
+  svgFile.push('<circle cx="', 10*p[0], '" cy="', 10*p[1], '" r="1" stroke="black" stroke-width="0.1" fill="black" />')
+})
+
+//Close tags, and serialize to stdout
 svgFile.push('</svg>')
 console.log(svgFile.join(""))
 ```
@@ -37,7 +45,19 @@ And here is the output SVG:
 
 <img src="https://mikolalysenko.github.io/surface-nets/example/2d.svg">
 
+This module also works in 3D.  Here is an example:
 
+```javascript
+//TODO: Finish 3D example
+```
+
+And here is the result:
+
+```
+TODO: Finish example
+```
+
+4D and higher dimensions are possible, but harder to visualize
 
 # Install
 
