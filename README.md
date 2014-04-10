@@ -23,19 +23,16 @@ var complex = surfaceNets(array, 16*16)
 
 //Write to SVG header
 var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
-
 //Draw lines
 complex.cells.forEach(function(cell) {
   var p0 = complex.positions[cell[0]]
   var p1 = complex.positions[cell[1]]
-  svgFile.push('<line x1="', 10*p0[0], '" y1="', 10*p0[1], '" x2="', 10*p1[0], '" y2="', 10*p1[1], '" style="stroke:rgb(255,0,0);stroke-width:1" />')
+  svgFile.push('<line x1="', 10*p0[0], '" y1="', 10*p0[1], '" x2="', 10*p1[0], '" y2="', 10*p1[1], '" stroke="red" stroke-width="1" />')
 })
-
 //Draw vertices
 complex.positions.forEach(function(p) {
   svgFile.push('<circle cx="', 10*p[0], '" cy="', 10*p[1], '" r="1" stroke="black" stroke-width="0.1" fill="black" />')
 })
-
 //Close tags, and serialize to stdout
 svgFile.push('</svg>')
 console.log(svgFile.join(""))
