@@ -35,7 +35,7 @@ console.log(svgFile.join(""))
 
 And here is the output SVG:
 
-<img src="example/2d.svg">
+<img src="https://mikolalysenko.github.io/surface-nets/example/2d.svg">
 
 
 
