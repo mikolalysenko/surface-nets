@@ -18,7 +18,7 @@ fill(array, function(i,j) {
   return Math.pow(i-16,2) + Math.pow(j-16,2)
 })
 
-//Extract contour
+//Extract 2D contour (this is all there is to it!)
 var complex = surfaceNets(array, 16*16)
 
 //Write SVG image to stdout

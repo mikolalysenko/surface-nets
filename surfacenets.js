@@ -44,8 +44,6 @@ function buildSurfaceNets(order, dtype) {
   }
   //Generate variables and giganto switch statement
   code.push("var m=", maskStr.join("+"), ";",
-    "console.log('         ',p0,p1,p2,p3,m,'--',v0,v1,v2,v3);",
-    //"a.push([d0,d1]);return;",
     "switch(m){")
   for(var i=0; i<1<<(1<<dimension); ++i) {
     code.push("case ", i, ":")
@@ -92,9 +90,6 @@ function buildSurfaceNets(order, dtype) {
               bias[l] -= 1
             }
           }
-          code.push("console.log('         ',",k, ",", 
-            crossings[k][crossings[k].length-1],  sign>0 ? "-" : "+", "512," , 
-            denoms[k][denoms[k].length-1], ");")
         }
       }
     }
@@ -116,7 +111,6 @@ function buildSurfaceNets(order, dtype) {
       }
     }
     code.push("a.push([", vertexStr.join(), "]);",
-      "console.log('         ',a[a.length-1]);",
       "break;")
   }
   code.push("default:}},")
@@ -129,7 +123,7 @@ function buildSurfaceNets(order, dtype) {
   faceArgs.push("c0", "c1", "p0", "p1", "a", "b", "c")
   code.push("cell:function cellFunc(", faceArgs.join(), "){")
 
-  code.push("console.log('face:',v0,v1,c0,c1,p0,p1,c);")
+  code.push("console.log('face:',v0,v1,v2,v3,c0,c1,p0,p1,c);")
 
   var facets = triangulateCube(dimension-1)
   code.push("if(p0){b.push(",
