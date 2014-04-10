@@ -4,6 +4,7 @@ module.exports = surfaceNets
 
 var generateContourExtractor = require("ndarray-extract-contour")
 var triangulateCube = require("triangulate-hypercube")
+var zeroCrossings = require("zero-crossings")
 
 function buildSurfaceNets(order, dtype) {
   var dimension = order.length
@@ -142,11 +143,29 @@ function buildSurfaceNets(order, dtype) {
   return proc(generateContourExtractor)
 }
 
+//1D case: Need to handle specially
+function mesh1D(array, level) {
+  var zc = zeroCrossings(array, level)
+  var n = zc.length
+  var npos = new Array(n)
+  var ncel = new Array(n)
+  for(var i=0; i<n; ++i) {
+    npos[i] = [ zc[i] ]
+    ncel[i] = i
+  }
+  return {
+    positions: npos,
+    cells: ncel
+  }
+}
+
 var CACHE = {}
 
 function surfaceNets(array,level) {
-  if(array.dimension === 0) {
+  if(array.dimension <= 0) {
     return { positions: [], cells: [] }
+  } else if(array.dimension === 1) {
+    return mesh1D(array, level)
   }
   var typesig = array.order.join() + "-" + array.dtype
   var proc = CACHE[typesig]

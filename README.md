@@ -81,7 +81,23 @@ And here is the result:
 
 <img src="https://mikolalysenko.github.io/surface-nets/example/3d.svg">
 
-The code *should* work in 4D and higher dimensions, but this is untested and it is harder to visualize.  (Also, why would you want to bother?)
+And while it is a bit trivial, you can also generate surfaces in 1D:
+
+```javascript
+var surfaceNets = require("surface-nets")
+var ndarray = require("ndarray")
+
+console.log(surfaceNets(ndarray([1, -1, 0, 5, -10])))
+```
+
+Output:
+
+```javascript
+{ positions: [ [ 0.5 ], [ 2 ], [ 3.3333333333333335 ] ],
+  cells: [ 0, 1, 2 ] }
+```
+
+The code *should* work in 4D and higher dimensions, but this is not well tested and it is harder to visualize.  (Also, why would you want to bother!?!)
 
 # Install
 
