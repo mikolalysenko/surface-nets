@@ -94,7 +94,7 @@ Output:
 
 ```javascript
 { positions: [ [ 0.5 ], [ 2 ], [ 3.3333333333333335 ] ],
-  cells: [ 0, 1, 2 ] }
+  cells: [ [ 0 ], [ 1 ], [ 2 ] ] }
 ```
 
 The code *should* work in 4D and higher dimensions, but this is not well tested and it is harder to visualize.  (Also, why would you want to bother!?!)

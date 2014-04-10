@@ -151,7 +151,7 @@ function mesh1D(array, level) {
   var ncel = new Array(n)
   for(var i=0; i<n; ++i) {
     npos[i] = [ zc[i] ]
-    ncel[i] = i
+    ncel[i] = [ i ]
   }
   return {
     positions: npos,
