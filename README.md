@@ -13,13 +13,13 @@ var ndarray = require("ndarray")
 var fill = require("ndarray-fill")
 
 //Initialize array to a circle
-var array = ndarray(new Float32Array(33*33), [33,33])
+var array = ndarray(new Float32Array(32*32), [32,32])
 fill(array, function(i,j) {
   return Math.pow(i-16,2) + Math.pow(j-16,2)
 })
 
 //Extract 2D contour (this is all there is to it!)
-var complex = surfaceNets(array, 16*16)
+var complex = surfaceNets(array, 15*15)
 
 //Write SVG image to stdout
 var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
