@@ -21,19 +21,16 @@ fill(array, function(i,j) {
 //Extract contour
 var complex = surfaceNets(array, 16*16)
 
-//Write to SVG header
+//Write SVG image to stdout
 var svgFile = ['<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">']
-//Draw lines
 complex.cells.forEach(function(cell) {
   var p0 = complex.positions[cell[0]]
   var p1 = complex.positions[cell[1]]
   svgFile.push('<line x1="', 10*p0[0], '" y1="', 10*p0[1], '" x2="', 10*p1[0], '" y2="', 10*p1[1], '" stroke="red" stroke-width="1" />')
 })
-//Draw vertices
 complex.positions.forEach(function(p) {
   svgFile.push('<circle cx="', 10*p[0], '" cy="', 10*p[1], '" r="1" stroke="black" stroke-width="0.1" fill="black" />')
 })
-//Close tags, and serialize to stdout
 svgFile.push('</svg>')
 console.log(svgFile.join(""))
 ```
@@ -72,7 +69,7 @@ Extracts the level set at `level` from `array` as a simplicial complex.
 
 **Returns** An object with a pair of properties representing a simplicial complex:
 
-* `positions` is an array encoding the positions of the vertices
+* `positions` is an array encoding the positions of the vertices.  The coordinates of the positions are with respect to the indices in `array`.
 * `cells` is an array encoding the cells of the simplicial complex as tuples of indices into the `position` array.
 
 # Credits
