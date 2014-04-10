@@ -9,7 +9,7 @@ fill(array, function(i,j) {
   return Math.pow(i-16,2) + Math.pow(j-16,2)
 })
 
-var complex = surfaceNets(array, 16*16)
+var complex = surfaceNets(array, 15*15)
 
 complex.positions.forEach(function(pt) {
   pt[0] += 1
