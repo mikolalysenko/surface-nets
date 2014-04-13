@@ -38,7 +38,12 @@
     "boundary",
     "volume",
     "marching",
-    "squares"
+    "squares",
+    "surface nets",
+    "dual contouring",
+    "dual",
+    "contour",
+    "isocontour"
   ],
   "author": "Mikola Lysenko",
   "license": "MIT",
