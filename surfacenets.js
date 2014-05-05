@@ -23,18 +23,21 @@ function buildSurfaceNets(order, dtype) {
 
   //Generate vertex function
   var cubeArgs = []
+  var extraArgs = []
   for(var i=0; i<dimension; ++i) {
     cubeArgs.push("d" + i)
+    extraArgs.push("d" + i)
   }
   for(var i=0; i<(1<<dimension); ++i) {
     cubeArgs.push("v" + i)
+    extraArgs.push("v" + i)
   }
   for(var i=0; i<(1<<dimension); ++i) {
     cubeArgs.push("p" + i)
+    extraArgs.push("p" + i)
   }
-  cubeArgs.push("a")
-  cubeArgs.push("b")
-  cubeArgs.push("c")
+  cubeArgs.push("a", "b", "c")
+  extraArgs.push("a", "c")
   code.push("vertex:function vertexFunc(", cubeArgs.join(), "){")
   //Mask args together
   var maskStr = []
@@ -42,22 +45,30 @@ function buildSurfaceNets(order, dtype) {
     maskStr.push("(p" + i + "<<" + i + ")")
   }
   //Generate variables and giganto switch statement
-  code.push("var m=(", maskStr.join("+"), ")|0;")
+  code.push("var m=(", maskStr.join("+"), ")|0;if(m===0||m===", (1<<(1<<dimension))-1, "){return}")
+  var extraFuncs = []
+  var currentFunc = []
   if(1<<(1<<dimension) <= 128) {
-    code.push("switch(m){")  
+    code.push("switch(m){")
+    currentFunc = code
   } else {
-    code.push("var mh=m>>>7;")
+    code.push("switch(m>>>7){")
   }
   for(var i=0; i<1<<(1<<dimension); ++i) {
     if(1<<(1<<dimension) > 128) {
       if((i%128)===0) {
-        if(i > 0) {
-          code.push("}")
+        if(extraFuncs.length > 0) {
+          currentFunc.push("}}")
         }
-        code.push("if(mh===", i>>>7, ")switch(m&0x7f){")
+        var efName = "vExtra" + extraFuncs.length
+        code.push("case ", (i>>>7), ":", efName, "(m&0x7f,", extraArgs.join(), ");break;")
+        currentFunc = [
+          "function ", efName, "(m,", extraArgs.join(), "){switch(m){"
+        ]
+        extraFuncs.push(currentFunc)
       }  
     }
-    code.push("case ", (i&0x7f), ":")
+    currentFunc.push("case ", (i&0x7f), ":")
     var crossings = new Array(dimension)
     var denoms = new Array(dimension)
     var crossingCount = new Array(dimension)
@@ -121,10 +132,13 @@ function buildSurfaceNets(order, dtype) {
         
       }
     }
-    code.push("a.push([", vertexStr.join(), "]);",
+    currentFunc.push("a.push([", vertexStr.join(), "]);",
       "break;")
   }
   code.push("}},")
+  if(extraFuncs.length > 0) {
+    currentFunc.push("}}")
+  }
 
   //Create face function
   var faceArgs = []
@@ -148,7 +162,11 @@ function buildSurfaceNets(order, dtype) {
         return "v" + v
       }) + "]"
     }).join(),
-    ")}}});function ", funcName, "(array,level){var verts=[],cells=[];contour(array,verts,cells,level);return {positions:verts,cells:cells};} return ", funcName)
+    ")}}});function ", funcName, "(array,level){var verts=[],cells=[];contour(array,verts,cells,level);return {positions:verts,cells:cells};} return ", funcName, ";")
+
+  for(var i=0; i<extraFuncs.length; ++i) {
+    code.push(extraFuncs[i].join(""))
+  }
 
   //Compile and link
   var proc = new Function("genContour", code.join(""))

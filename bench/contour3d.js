@@ -13,6 +13,9 @@ fill(array, function(i,j,k) {
 
 //Generate surface!
 var complex = surfaceNets(array, 100)
+for(var i=0; i<10; ++i) {
+  complex = surfaceNets(array, 100)
+}
 
 console.time("surface-nets 3d")
 for(var i=0; i<1000; ++i) {
