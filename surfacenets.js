@@ -42,10 +42,22 @@ function buildSurfaceNets(order, dtype) {
     maskStr.push("(p" + i + "<<" + i + ")")
   }
   //Generate variables and giganto switch statement
-  code.push("var m=", maskStr.join("+"), ";",
-    "switch(m){")
+  code.push("var m=(", maskStr.join("+"), ")|0;")
+  if(1<<(1<<dimension) <= 128) {
+    code.push("switch(m){")  
+  } else {
+    code.push("var mh=m>>>7;")
+  }
   for(var i=0; i<1<<(1<<dimension); ++i) {
-    code.push("case ", i, ":")
+    if(1<<(1<<dimension) > 128) {
+      if((i%128)===0) {
+        if(i > 0) {
+          code.push("}")
+        }
+        code.push("if(mh===", i>>>7, ")switch(m&0x7f){")
+      }  
+    }
+    code.push("case ", (i&0x7f), ":")
     var crossings = new Array(dimension)
     var denoms = new Array(dimension)
     var crossingCount = new Array(dimension)
@@ -112,7 +124,7 @@ function buildSurfaceNets(order, dtype) {
     code.push("a.push([", vertexStr.join(), "]);",
       "break;")
   }
-  code.push("default:}},")
+  code.push("}},")
 
   //Create face function
   var faceArgs = []
