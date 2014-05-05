@@ -1,6 +1,6 @@
 {
   "name": "surface-nets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "General purpose level set extraction",
   "main": "surfacenets.js",
   "directories": {
