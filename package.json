@@ -1,6 +1,6 @@
 {
   "name": "surface-nets",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "General purpose level set extraction",
   "main": "surfacenets.js",
   "directories": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "ndarray-extract-contour": "^1.0.0",
-    "triangulate-hypercube": "^0.0.0",
+    "triangulate-hypercube": "^1.0.0",
     "zero-crossings": "^1.0.0"
   },
   "devDependencies": {
