@@ -28,12 +28,7 @@ tape("sphere-test", function(t) {
   for(var d=1; d<=4; ++d) {
     shape.push(16)
     size *= 16
-    fact *= d
-
-    if(d !== 3) {
-      continue
-    }
-    
+    fact *= d    
 
     var x = ndarray(new Float32Array(size), shape)
     fill(x, funcs[d-1])
