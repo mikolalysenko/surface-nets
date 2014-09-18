@@ -18,7 +18,10 @@
     "ndarray-fill": "~0.1.0",
     "svg-3d-simplicial-complex": "~0.1.1",
     "tape": "~2.12.3",
-    "isosurface": "^1.0.0"
+    "isosurface": "^1.0.0",
+    "robust-determinant": "^1.1.0",
+    "gamma": "^0.1.0",
+    "stl": "^1.1.1"
   },
   "scripts": {
     "test": "tape test/*.js"
