@@ -6,10 +6,10 @@ var generateContourExtractor = require("ndarray-extract-contour")
 var triangulateCube = require("triangulate-hypercube")
 var zeroCrossings = require("zero-crossings")
 
-function buildSurfaceNets(inOrder, dtype) {
+function buildSurfaceNets(inOrder, inType) {
   var dimension = inOrder.length
   var code = ["'use strict';"]
-  var funcName = "surfaceNets" + inOrder.join("_") + "d" + dtype
+  var funcName = "surfaceNets" + inOrder.join("_") + "d" + inType
 
   //Contour extraction function
   code.push(
@@ -17,7 +17,7 @@ function buildSurfaceNets(inOrder, dtype) {
       "order:[", inOrder.join(), "],",
       "scalarArguments: 3,",
       "phase:function phaseFunc(p,a,b,c) { return (p > c)|0 },")
-  if(dtype === "generic") {
+  if(inType === "generic") {
     code.push("getters:[0],")
   }
 
