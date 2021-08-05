@@ -66,7 +66,7 @@ function buildSurfaceNets(order, dtype) {
           "function ", efName, "(m,", extraArgs.join(), "){switch(m){"
         ]
         extraFuncs.push(currentFunc)
-      }  
+      }
     }
     currentFunc.push("case ", (i&0x7f), ":")
     var crossings = new Array(dimension)
@@ -99,7 +99,7 @@ function buildSurfaceNets(order, dtype) {
             crossingCount[k] += 2
           } else {
             crossings[k].push("v" + j + "+v" + u)
-            crossingCount[k] -= 2            
+            crossingCount[k] -= 2
           }
           totalCrossings += 1
           for(var l=0; l<dimension; ++l) {
@@ -129,7 +129,7 @@ function buildSurfaceNets(order, dtype) {
         var weight = 0.5 * (crossings[k].length / totalCrossings)
         var shift = 0.5 + 0.5 * (bias[k] / totalCrossings)
         vertexStr.push("d" + k + "-" + shift + "-" + weight + "*(" + crossings[k].join("+") + cStr + ")/(" + denoms[k].join("+") + ")")
-        
+
       }
     }
     currentFunc.push("a.push([", vertexStr.join(), "]);",
