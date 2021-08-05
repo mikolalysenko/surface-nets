@@ -6,20 +6,41 @@ var generateContourExtractor = require("ndarray-extract-contour")
 var triangulateCube = require("triangulate-hypercube")
 var zeroCrossings = require("zero-crossings")
 
-function buildSurfaceNets(inOrder, inType) {
+var allFns = {
+ '2d': null,
+ '3d': null,
+}
+
+function buildSurfaceNets(inOrder) {
+  var inKey = inOrder.length + 'd'
+  var fn = allFns[inKey]
+  if(!fn) {
+    fn = genFn(inOrder)
+    allFns[inKey] = fn
+    var str = fn.toString()
+      .replace(/\n/g,"")
+      .replace("function anonymous(genContour)", "function(genContour, order)")
+      .replace("order: [" + inOrder.join() + "],", "order: order,")
+
+    console.log("'" + inKey + "': " + str + ',')
+  }
+
+  return fn(generateContourExtractor, inOrder)
+}
+
+buildSurfaceNets([0, 1]) // 2d
+buildSurfaceNets([0, 1, 2]) // 3d
+
+function genFn(inOrder) {
   var dimension = inOrder.length
-  var code = ["'use strict';"]
-  var funcName = "surfaceNets" + inOrder.join("_") + "d" + inType
+  var code = []
 
   //Contour extraction function
   code.push(
     "var contour=genContour({",
-      "order:[", inOrder.join(), "],",
+      "order: [" + inOrder.join() + "],",
       "scalarArguments: 3,",
-      "phase:function phaseFunc(p,a,b,c) { return (p > c)|0 },")
-  if(inType === "generic") {
-    code.push("getters:[0],")
-  }
+      "phase: function phaseFunc(p,a,b,c) { return (p > c)|0 },")
 
   //Generate vertex function
   var cubeArgs = []
@@ -162,15 +183,14 @@ function buildSurfaceNets(inOrder, inType) {
         return "v" + v
       }) + "]"
     }).join(),
-    ")}}});function ", funcName, "(array,level){var verts=[],cells=[];contour(array,verts,cells,level);return {positions:verts,cells:cells};} return ", funcName, ";")
+    ")}}});return function(array,level){var verts=[],cells=[];contour(array,verts,cells,level);return {positions:verts,cells:cells};};")
 
   for(var i=0; i<extraFuncs.length; ++i) {
     code.push(extraFuncs[i].join(""))
   }
 
   //Compile and link
-  var proc = new Function("genContour", code.join(""))
-  return proc(generateContourExtractor)
+  return new Function("genContour", code.join(""))
 }
 
 //1D case: Need to handle specially
