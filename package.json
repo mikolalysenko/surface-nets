@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "ndarray-extract-contour": "^1.0.0",
-    "triangulate-hypercube": "^1.0.0",
     "zero-crossings": "^1.0.0"
   },
   "devDependencies": {
