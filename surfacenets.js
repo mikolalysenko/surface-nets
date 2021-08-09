@@ -15,10 +15,11 @@ var F9_14 = 9 / 14
 var F11_18 = 11 / 18
 
 var allFns = {
-  "2d": function (genContour, order) {
+  "2d": function (genContour, order, dtype) {
     var contour = genContour({
       order: order,
       scalarArguments: 3,
+      getters: dtype === "generic" ? [0] : undefined,
       phase: function phaseFunc(p, a, b, c) {
         return (p > c) | 0;
       },
@@ -93,10 +94,11 @@ var allFns = {
       return { positions: verts, cells: cells };
     };
   },
-  "3d": function (genContour, order) {
+  "3d": function (genContour, order, dtype) {
     var contour = genContour({
       order: order,
       scalarArguments: 3,
+      getters: dtype === "generic" ? [0] : undefined,
       phase: function phaseFunc(p, a, b, c) {
         return (p > c) | 0;
       },
@@ -1555,10 +1557,10 @@ var allFns = {
   },
 }
 
-function buildSurfaceNets(inOrder) {
-  var inKey = inOrder.length + 'd'
+function buildSurfaceNets(order, dtype) {
+  var inKey = order.length + 'd'
   var fn = allFns[inKey]
-  if(fn) return fn(generateContourExtractor, inOrder)
+  if(fn) return fn(generateContourExtractor, order, dtype)
 }
 
 //1D case: Need to handle specially
