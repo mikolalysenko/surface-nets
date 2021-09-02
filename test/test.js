@@ -25,10 +25,10 @@ tape("sphere-test", function(t) {
       return Math.pow(x-8,2) + Math.pow(y-8,2) + Math.pow(z-8,2) + Math.pow(w-8,2)
     }
   ]
-  for(var d=1; d<=4; ++d) {
+  for(var d=1; d<4; ++d) {
     shape.push(16)
     size *= 16
-    fact *= d    
+    fact *= d
 
     var x = ndarray(new Float32Array(size), shape)
     fill(x, funcs[d-1])
