@@ -3,22 +3,13 @@
   "version": "1.1.0",
   "description": "General purpose level set extraction",
   "main": "surfacenets.js",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
   "dependencies": {
     "ndarray-extract-contour": "^1.0.0",
     "zero-crossings": "^1.0.0"
   },
-  "devDependencies": {
-  },
-  "scripts": {
-    "test": "tape test/*.js"
-  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mikolalysenko/surface-nets.git"
+    "url": "git://github.com/plotly/surface-nets.git"
   },
   "keywords": [
     "surface",
@@ -42,7 +33,7 @@
   "author": "Mikola Lysenko",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mikolalysenko/surface-nets/issues"
+    "url": "https://github.com/plotly/surface-nets/issues"
   },
-  "homepage": "https://github.com/mikolalysenko/surface-nets"
+  "homepage": "https://github.com/plotly/surface-nets"
 }
